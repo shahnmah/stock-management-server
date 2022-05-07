@@ -13,13 +13,22 @@ app.use(express.json())
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster1.1psxw.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
-client.connect(err => {
-  const collection = client.db("test").collection("devices");
-  console.log('okay')
-  // perform actions on the collection object
-  client.close();
-});
+async function run() {
+  try {
+    await client.connect()
+    const busCollection = client.db("busStock").collection("bus");
+    app.get('/bus', async (req, res) => {
+      const query = {};
+      const cursor = busCollection.find(query);
+      const buses = await cursor.toArray();
+      res.send(buses)
+    })
+  }
+  finally {
 
+  }
+}
+run().catch(console.dir)
 
 app.get('/', (req, res) => {
   res.send('Hello World!')
