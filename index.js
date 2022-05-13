@@ -17,15 +17,15 @@ async function run() {
   try {
     await client.connect()
     const busCollection = client.db("busStock").collection("bus");
+    // api for load all item
     app.get('/allbuses', async (req, res) => {
       const query = {};
       const cursor = busCollection.find(query);
       const buses = await cursor.toArray();
       res.send(buses)
     })
-
+    // api for load sing item
     app.get('/bus/:id', async(req, res)=>{
-      console.log(req.params)
       const id = req.params.id;
       const query= {_id: ObjectId(id)}
       const bus = await busCollection.findOne(query)
@@ -35,20 +35,16 @@ async function run() {
     // Post api for add item
     app.post('/bus', async(req, res)=>{
       const data = req.body;
-      console.log(data)
       const newItem = await busCollection.insertOne(data)
       res.send(newItem)
     })
     // delete api
     app.delete('/allbuses/:id', async(req, res)=>{
       const id = req.params.id;
-      console.log(id)
       const query = {_id: ObjectId(id)};
       const deleteItem = await busCollection.deleteOne(query);
       res.send(deleteItem)
     })
-
-
   }
   finally {
 
