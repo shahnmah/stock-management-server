@@ -17,7 +17,7 @@ async function run() {
   try {
     await client.connect()
     const busCollection = client.db("busStock").collection("bus");
-    app.get('/bus', async (req, res) => {
+    app.get('/buses', async (req, res) => {
       const query = {};
       const cursor = busCollection.find(query);
       const buses = await cursor.limit(6).toArray();
@@ -36,6 +36,16 @@ async function run() {
       const cursor = busCollection.find(query);
       const buses = await cursor.toArray();
       res.send(buses)
+    })
+
+    // Post api for add item
+    // http://localhost:5000/bus
+    app.post('/bus', async(req, res)=>{
+      const data = req.body;
+      console.log(data)
+      const newItem = await busCollection.insertOne(data)
+      res.send(newItem)
+
     })
 
   }
