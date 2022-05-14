@@ -38,12 +38,28 @@ async function run() {
       const newItem = await busCollection.insertOne(data)
       res.send(newItem)
     })
+
     // delete api
     app.delete('/allbuses/:id', async(req, res)=>{
       const id = req.params.id;
       const query = {_id: ObjectId(id)};
       const deleteItem = await busCollection.deleteOne(query);
       res.send(deleteItem)
+    })
+
+    // api for update 
+    app.put('/allbuses/:id', async(req, res)=>{
+      const id = req.params.id;
+      const data = req.body;
+      const filter = { _id: ObjectId(id)};
+      const options = { upsert: true };
+      const updateDoc = {
+        $set: {
+           quantity: data.quantity
+        },
+      };
+      const result = await busCollection.updateOne(filter, updateDoc, options);
+      res.send(result)
     })
   }
   finally {
