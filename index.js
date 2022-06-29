@@ -13,6 +13,7 @@ async function run() {
   try {
     await client.connect()
     const busCollection = client.db("busStock").collection("bus");
+
     // api for load all item
     app.get('/allbuses', async (req, res) => {
       const query = {};
@@ -20,7 +21,8 @@ async function run() {
       const buses = await cursor.toArray();
       res.send(buses)
     })
-    // api for load sing item
+    
+    // api for load single item
     app.get('/bus/:id', async(req, res)=>{
       const id = req.params.id;
       const query= {_id: ObjectId(id)}
@@ -67,7 +69,6 @@ run().catch(console.dir)
 app.get('/', (req, res) => {
   res.send('Server for inventory website')
 })
-
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)
 })
